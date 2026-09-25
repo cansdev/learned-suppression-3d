@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pth
+*.pt
+*.npz
+*.zip
+data/
+output/
+wandb/
+.venv/
+.idea/
+.vscode/

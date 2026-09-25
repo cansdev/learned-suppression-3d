@@ -1,0 +1,73 @@
+# KeypointNet, one model for all 16 categories.
+data:
+  name: keypointnet
+  pcd_dir: data/keypointnet/pcds             # <synset id>/<model id>.pcd
+  annotation_dir: data/keypointnet/annotations
+  split_dir: data/keypointnet/splits         # official train.txt / val.txt / test.txt
+  cache_dir: data/cache/keypointnet
+  categories: []                             # empty = all 16
+  num_points: 2048
+  label_radius: 0.10                         # r in Eq. 3
+  use_color: true                            # RGB
+  use_normals: true                          # PCA normals, C = 9 in total
+  normal_k: 16
+  label_distance: geodesic                   # distance to the nearest keypoint along the surface
+  gnn_graph: geodesic                        # geodesic neighborhoods for the directional GNN
+  geodesic_graph_k: 10                       # kNN graph on which geodesics are computed
+  geodesic_limit: 0.3                        # search radius of the geodesic neighbor query
+  augment: true                              # flips, rotation about z, point jitter
+  jitter_std: 0.005
+
+model:
+  use_dedup: false
+  gnn_k: 16
+
+train:
+  epochs: 100
+  batch_size: 14
+  num_workers: 8
+  max_lr: 3.0e-3
+  weight_decay: 0.01
+  pct_start: 0.05
+  div_factor: 25.0
+  final_div_factor: 1.0e+4
+  grad_clip: 1.0
+
+loss:
+  beta: 2.0
+  gamma_start: 2.0
+  gamma_end: 1.05
+  gamma_epochs: 100
+  offset_weight: 1.0
+  var_weight: 0.1
+  cov_weight: 0.01
+
+suppression:
+  vote_threshold: 0.10
+  offset_scale: 0.10     # equals r
+  refine_rounds: 2
+  refine_radius: 0.05
+  nms_radius: 0.05
+  k_nbr: 4
+  n_rounds: 2
+  suppress_radius: 0.08
+  keep_threshold: 0.40
+  hidden: 128
+  rel_hidden: 64
+  dropout: 0.1
+  match_thresh: 0.10
+  epochs: 60
+  batch_size: 4          # KeypointNet shapes yield more candidates; the pairwise step is O(K^2)
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  offset_weight: 1.0
+  smooth_l1_beta: 0.01
+  n_aug: 4
+  val_split: val
+  keep_thresholds: [0.10, 0.20, 0.30, 0.39, 0.40, 0.41, 0.50, 0.60, 0.70, 0.80]
+
+inference:
+  tta_angles: [0]
+  min_votes: 1
+  eval_dist_thresh: 0.10
+  dbscan: {threshold: 0.3, eps: 0.05, min_samples: 1}

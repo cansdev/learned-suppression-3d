@@ -1,0 +1,6 @@
+# Install PyTorch separately for your CUDA version (https://pytorch.org); tested with torch 2.6.
+numpy>=1.24
+scipy>=1.10
+scikit-learn>=1.3
+PyYAML>=6.0
+tqdm>=4.60

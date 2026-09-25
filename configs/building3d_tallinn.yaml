@@ -1,0 +1,70 @@
+# Building3D Tallinn (full city split).
+data:
+  name: building3d
+  root_dir: data/building3d/Tallinn
+  cache_dir: data/cache/building3d_tallinn
+  train_ids: null                                  # optional list restricting the training pool
+  val_ids: splits/building3d_tallinn_val_ids.txt   # hold out used for validation
+  num_points: 2560
+  label_radius: 0.05                               # r in Eq. 3
+  use_color: true                                  # RGBA
+  use_intensity: true
+  use_scale_features: true                         # log scale + 3 extents, C = 12 in total
+  augment: true                                    # random flips and rotation about z
+
+model:
+  use_dedup: true        # prefer distinct positions in FPS and kNN (upsampled scenes contain duplicates)
+  gnn_k: 16              # neighbors of the directional GNN
+
+train:
+  epochs: 300
+  batch_size: 32
+  num_workers: 8
+  max_lr: 3.0e-3         # OneCycleLR peak, AdamW
+  weight_decay: 0.01
+  pct_start: 0.05
+  div_factor: 25.0
+  final_div_factor: 1.0e+4
+  grad_clip: 1.0
+
+loss:
+  beta: 2.0              # distance weight 1 + beta exp(-d / r)
+  gamma_start: 2.0       # focal exponent annealed linearly ...
+  gamma_end: 1.05        # ... to this floor ...
+  gamma_epochs: 100      # ... over these epochs
+  offset_weight: 1.0
+  var_weight: 0.1
+  cov_weight: 0.01
+
+suppression:
+  # candidate generation
+  vote_threshold: 0.10
+  offset_scale: 0.05     # votes at p + offset_scale * offset; equals r
+  refine_rounds: 2       # mean shift iterations
+  refine_radius: 0.05
+  nms_radius: 0.05
+  k_nbr: 4               # neighbor candidates pooled into z_j
+  # module (Algorithm 1)
+  n_rounds: 2            # T
+  suppress_radius: 0.08  # rho
+  keep_threshold: 0.40   # tau (training picks the best value on the validation split)
+  hidden: 128
+  rel_hidden: 64
+  dropout: 0.1
+  # training
+  match_thresh: 0.10     # Hungarian assignment radius
+  epochs: 60
+  batch_size: 8
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  offset_weight: 1.0
+  smooth_l1_beta: 0.01
+  n_aug: 4               # random z rotations of the training scenes when building candidates
+  val_split: validation  # split used to select the epoch and tau; null holds out 20% of train
+  keep_thresholds: [0.10, 0.20, 0.30, 0.39, 0.40, 0.41, 0.50, 0.60, 0.70, 0.80]
+
+inference:
+  tta_angles: [0, 90, 180, 270]
+  min_votes: 2           # keep a keypoint found in at least this many rotations
+  eval_dist_thresh: 0.10
+  dbscan: {threshold: 0.3, eps: 0.05, min_samples: 1}
