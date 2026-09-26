@@ -298,7 +298,7 @@ This work builds on the following projects; we thank their authors for making th
 
 - [Building3D](https://building3d.ucalgary.ca/) (Wang et al., ICCV 2023): dataset, data format and evaluation protocol.
 - [KeypointNet](https://github.com/qq456cvb/KeypointNet) (You et al., CVPR 2020): dataset and splits.
-- KeypointDETR (Jin et al., ECCV 2024): KeypointNet evaluation protocol.
+- [KeypointDETR](https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/09481.pdf) (Jin et al., ECCV 2024): KeypointNet evaluation protocol.
 - [PointNet++](https://arxiv.org/abs/1706.02413) (Qi et al., NeurIPS 2017), via the [PyTorch implementation](https://github.com/yanx27/Pointnet_Pointnet2_pytorch) by Xu Yan.
 - [Point Transformer](https://arxiv.org/abs/2012.09164) (Zhao et al., ICCV 2021), [UNet 3+](https://arxiv.org/abs/2004.08790) (Huang et al., ICASSP 2020), [VICReg](https://arxiv.org/abs/2105.04906) (Bardes et al., ICLR 2022).
 - [Learning non-maximum suppression](https://arxiv.org/abs/1705.02950) (Hosang et al., CVPR 2017).
