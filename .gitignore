@@ -4,7 +4,7 @@ __pycache__/
 *.pt
 *.npz
 *.zip
-data/
+/data/
 output/
 wandb/
 .venv/
