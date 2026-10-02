@@ -285,11 +285,14 @@ python make_submission.py --pred_dir output/predictions/building3d_test_learned 
 If you find this work useful, please cite:
 
 ```bibtex
-@inproceedings{bekar2026learned,
-  title     = {Learned Suppression for 3D Keypoint Detection with a Graph-Transformer Backbone},
-  author    = {Bekar, Batuhan Arda and Sar{\i}, Can and G{\"u}lkan, H{\"u}seyin Can and {\"O}zcan, Bar{\i}{\c{s}}},
-  booktitle = {Proceedings of the Asian Conference on Computer Vision (ACCV)},
-  year      = {2026}
+@misc{bekar2026learnedsuppression3dkeypoint,
+      title={Learned Suppression for 3D Keypoint Detection with a Graph-Transformer Backbone}, 
+      author={Batuhan Arda Bekar and Can Sarı and Hüseyin Can Gülkan and Barış Özcan},
+      year={2026},
+      eprint={2605.15088},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2605.15088},
 }
 ```
 
